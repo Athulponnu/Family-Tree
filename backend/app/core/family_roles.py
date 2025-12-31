@@ -1,0 +1,3 @@
+ELDER = "ELDER"
+VP = "VP"
+MEMBER = "MEMBER"

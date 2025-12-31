@@ -1,0 +1,32 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.db.base import Base
+from app.db.session import engine
+
+# register models
+import app.models
+
+from app.api.v1.auth import router as auth_router
+from app.api.v1.families import router as families_router
+from app.api.v1.users import router as users_router
+
+app = FastAPI(title="Family Information Holder API")
+
+Base.metadata.create_all(bind=engine)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(auth_router, prefix="/auth", tags=["Auth"])
+app.include_router(users_router, prefix="/users", tags=["Users"])
+app.include_router(families_router, prefix="/families", tags=["Families"])
+
+@app.get("/")
+def root():
+    return {"status": "API running"}
