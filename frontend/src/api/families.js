@@ -24,3 +24,7 @@ export const inviteMember = (family_id, role) => {
 export const joinFamily = (token, data) => {
   return api.post(`/families/join/${token}`, data);
 };
+
+export const getMyFamilies = () => {
+  return api.get("/families/my");
+};
