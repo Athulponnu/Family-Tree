@@ -1,25 +1,22 @@
 import { useState } from "react";
-import { createFamily } from "../api/families";
+import { createFamilyApi } from "../api/families";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateFamily() {
   const [name, setName] = useState("");
+  const navigate = useNavigate();
 
-  const submit = async () => {
-    try {
-      await createFamily(name);
-      alert("Family created");
-    } catch (err) {
-      const msg = err?.response?.data || err.message;
-      alert("Failed to create family: " + JSON.stringify(msg));
-      console.error("Create family error:", err);
-    }
+  const submit = async (e) => {
+    e.preventDefault();
+    await createFamilyApi(name);
+    navigate("/families");
   };
 
   return (
-    <div>
+    <form onSubmit={submit}>
       <h2>Create Family</h2>
-      <input value={name} placeholder="Family Name" onChange={e => setName(e.target.value)} />
-      <button onClick={submit}>Create</button>
-    </div>
+      <input onChange={(e) => setName(e.target.value)} />
+      <button>Create</button>
+    </form>
   );
 }

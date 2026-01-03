@@ -1,21 +1,28 @@
 import { useState } from "react";
-import { registerUser } from "../api/auth";
+import { registerApi } from "../api/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
 
-  const submit = async () => {
-    await registerUser(form);
-    alert("Registered successfully");
+  const submit = async (e) => {
+    e.preventDefault();
+    await registerApi(form);
+    navigate("/login");
   };
 
   return (
-    <div>
+    <form onSubmit={submit}>
       <h2>Register</h2>
-      <input placeholder="Username" onChange={e => setForm({...form, username: e.target.value})} />
-      <input placeholder="Email" onChange={e => setForm({...form, email: e.target.value})} />
-      <input type="password" placeholder="Password" onChange={e => setForm({...form, password: e.target.value})} />
-      <button onClick={submit}>Register</button>
-    </div>
+      <input placeholder="Username" onChange={(e)=>setForm({...form,username:e.target.value})}/>
+      <input placeholder="Email" onChange={(e)=>setForm({...form,email:e.target.value})}/>
+      <input type="password" placeholder="Password" onChange={(e)=>setForm({...form,password:e.target.value})}/>
+      <button>Register</button>
+    </form>
   );
 }

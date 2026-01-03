@@ -1,31 +1,20 @@
+import { useParams } from "react-router-dom";
+import { inviteMemberApi } from "../api/families";
 import { useState } from "react";
-import { inviteMember } from "../api/families";
 
-export default function InviteMember({ familyId }) {
-  const [role, setRole] = useState("MEMBER");
+export default function InviteMember() {
+  const { id } = useParams();
   const [token, setToken] = useState("");
 
-  const generateInvite = async () => {
-    const res = await inviteMember(familyId, role);
+  const invite = async () => {
+    const res = await inviteMemberApi(id, "Member");
     setToken(res.data.invite_token);
   };
 
   return (
     <div>
-      <h3>Invite Member</h3>
-
-      <select onChange={e => setRole(e.target.value)}>
-        <option value="MEMBER">Member</option>
-        <option value="ELDER">Elder</option>
-      </select>
-
-      <button onClick={generateInvite}>Generate Invite</button>
-
-      {token && (
-        <p>
-          Invite Token: <b>{token}</b>
-        </p>
-      )}
+      <button onClick={invite}>Generate Invite</button>
+      {token && <p>Invite Token: {token}</p>}
     </div>
   );
 }

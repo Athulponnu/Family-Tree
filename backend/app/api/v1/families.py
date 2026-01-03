@@ -32,14 +32,19 @@ def create_family(
     db.refresh(family)
 
     membership = FamilyMembership(
-        user_id=user["sub"],
+        user_id=user.id,        # ✅ FIXED LINE
         family_id=family.id,
         role=ELDER
     )
     db.add(membership)
     db.commit()
+    
+    return {
+    "family_id": family.id,
+    "family_name": family.family_name,
+    "role": ELDER
+    }
 
-    return family
 
 
 # 2️⃣ Invite member
@@ -52,7 +57,7 @@ def invite_member(
 ):
     membership = db.query(FamilyMembership).filter(
         FamilyMembership.family_id == family_id,
-        FamilyMembership.user_id == user["sub"]
+        FamilyMembership.user_id == user.id
     ).first()
 
     if not membership or membership.role != ELDER:
@@ -87,7 +92,7 @@ def join_family(
         raise HTTPException(status_code=404, detail="Invalid invite")
 
     membership = FamilyMembership(
-        user_id=user["sub"],
+        user_id=user.id,
         family_id=invite.family_id,
         role=invite.role
     )

@@ -1,30 +1,13 @@
-import api from "./axios";
+import axios from "./axios";
 
-// ----------------------
-// Create Family
-// ----------------------
-export const createFamily = (family_name) => {
-  return api.post("/families/", {
-    family_name: family_name,
+export const fetchFamilies = () => axios.get("/families");
+export const createFamilyApi = (family_name) =>
+  axios.post("/families", null, { params: { family_name } });
+
+export const inviteMemberApi = (familyId, role) =>
+  axios.post(`/families/${familyId}/invite`, null, {
+    params: { role },
   });
-};
 
-// ----------------------
-// Invite Member
-// ----------------------
-export const inviteMember = (family_id, role) => {
-  return api.post(`/families/${family_id}/invite`, {
-    role: role,
-  });
-};
-
-// ----------------------
-// Join Family (if implemented later)
-// ----------------------
-export const joinFamily = (token, data) => {
-  return api.post(`/families/join/${token}`, data);
-};
-
-export const getMyFamilies = () => {
-  return api.get("/families/my");
-};
+export const joinFamilyApi = (token) =>
+  axios.post(`/families/join/${token}`);

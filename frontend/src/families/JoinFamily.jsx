@@ -1,25 +1,13 @@
-import { useState } from "react";
-import { joinFamily } from "../api/families";
+import { useParams } from "react-router-dom";
+import { joinFamilyApi } from "../api/families";
 
 export default function JoinFamily() {
-  const [token, setToken] = useState("");
+  const { token } = useParams();
 
   const join = async () => {
-    await joinFamily(token);
+    await joinFamilyApi(token);
     alert("Joined family successfully");
   };
 
-  return (
-    <div>
-      <h3>Join Family</h3>
-
-      <input
-        placeholder="Invite Token"
-        value={token}
-        onChange={e => setToken(e.target.value)}
-      />
-
-      <button onClick={join}>Join</button>
-    </div>
-  );
+  return <button onClick={join}>Join Family</button>;
 }
