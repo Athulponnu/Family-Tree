@@ -4,22 +4,28 @@ import { loginApi } from "../api/auth";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(localStorage.getItem("access_token"));
+  const [token, setToken] = useState(
+    localStorage.getItem("access_token")
+  );
 
   const login = async (credentials) => {
     const res = await loginApi(credentials);
     localStorage.setItem("access_token", res.data.access_token);
-    setUser(res.data.access_token);
+    setToken(res.data.access_token);
   };
 
   const logout = () => {
     localStorage.removeItem("access_token");
-    setUser(null);
+    setToken(null);
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated: !!user, login, logout }}
+      value={{
+        isAuthenticated: !!token,
+        login,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

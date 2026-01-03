@@ -8,6 +8,8 @@ from app.models.family_membership import FamilyMembership
 from app.models.family_invite import FamilyInvite
 from app.core.dependencies import get_current_user
 from app.core.family_roles import ELDER
+from app.models.user import User
+
 
 router = APIRouter()
 
@@ -102,3 +104,19 @@ def join_family(
     db.commit()
 
     return {"message": "Joined family successfully"}
+
+
+
+@router.get("/")
+def list_my_families(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    families = (
+        db.query(Family)
+        .join(FamilyMembership)
+        .filter(FamilyMembership.user_id == user.id)
+        .all()
+    )
+
+    return families

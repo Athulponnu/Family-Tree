@@ -16,16 +16,25 @@ export default function Login() {
   return (
     <form onSubmit={submit}>
       <h2>Login</h2>
+
       <input
         placeholder="Username"
-        onChange={(e) => setForm({ ...form, username: e.target.value })}
+        value={form.username}
+        onChange={(e) =>
+          setForm({ ...form, username: e.target.value })
+        }
       />
+
       <input
         type="password"
         placeholder="Password"
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
+        value={form.password}
+        onChange={(e) =>
+          setForm({ ...form, password: e.target.value })
+        }
       />
-      <button>Login</button>
+
+      <button type="submit">Login</button>
     </form>
   );
 }
