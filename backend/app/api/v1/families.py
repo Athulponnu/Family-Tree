@@ -76,8 +76,10 @@ def invite_member(
     db.add(invite)
     db.commit()
 
-    return {"invite_token": token}
-
+    return {
+        "invite_token": invite.token,
+        "expires_at": invite.expires_at
+        }
 
 # 3️⃣ Join family using invite
 @router.post("/join/{token}")
