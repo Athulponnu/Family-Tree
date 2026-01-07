@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.db.base import Base
 from app.db.session import engine
-
+from app.api.v1.users import router as users_router
 # register models
 import app.models
 
@@ -12,7 +12,7 @@ from app.api.v1.families import router as families_router
 from app.api.v1.users import router as users_router
 
 app = FastAPI(title="Family Information Holder API")
-
+app.include_router(users_router)
 Base.metadata.create_all(bind=engine)
 
 app.add_middleware(

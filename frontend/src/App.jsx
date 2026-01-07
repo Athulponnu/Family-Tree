@@ -7,6 +7,7 @@ import InviteMember from "./families/InviteMember";
 import JoinFamily from "./families/JoinFamily";
 import Navbar from "./components/Navbar";
 import { useAuth } from "./context/AuthContext";
+import Profile from "./profile/Profile";
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
@@ -39,6 +40,15 @@ export default function App() {
         />
 
         {/* PROTECTED ROUTES */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/families"
           element={

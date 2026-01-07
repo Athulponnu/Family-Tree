@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String,Text
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 
@@ -11,3 +11,4 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
 
     memberships = relationship("FamilyMembership", back_populates="user")
+    bio = Column(Text, nullable=True)

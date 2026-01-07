@@ -30,6 +30,7 @@ export default function Navbar() {
             <Link to="/login" className="hover:text-gray-300">
               Login
             </Link>
+
             <Link
               to="/register"
               className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition"
@@ -42,12 +43,18 @@ export default function Navbar() {
             <Link to="/families" className="hover:text-gray-300">
               My Families
             </Link>
+
             <Link
               to="/families/create"
               className="bg-green-600 px-4 py-2 rounded hover:bg-green-700 transition"
             >
               + Create Family
             </Link>
+
+            <Link to="/profile" className="hover:text-gray-300">
+              Profile
+            </Link>
+
             <button
               onClick={logout}
               className="text-red-400 hover:text-red-300"
