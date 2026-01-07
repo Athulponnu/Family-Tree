@@ -12,42 +12,79 @@ export default function MyFamilies() {
   }, []);
 
   const joinFamily = () => {
-    if (!inviteToken.trim()) {
-      alert("Enter invite token");
-      return;
-    }
-    navigate(`/families/join/${inviteToken}`);
+    if (!inviteToken.trim()) return;
+    navigate(`/families/join/${inviteToken.trim()}`);
   };
 
   return (
-    <div>
-      <h2>My Families</h2>
+    <div className="min-h-[calc(100vh-64px)] bg-gray-50 px-6 py-8">
+      <div className="max-w-5xl mx-auto space-y-8">
+        {/* HEADER */}
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold text-gray-800">
+            My Families
+          </h2>
+          <Link
+            to="/families/create"
+            className="bg-green-600 text-white px-4 py-2 rounded-lg
+                       font-medium hover:bg-green-700 transition"
+          >
+            + Create Family
+          </Link>
+        </div>
 
-      <div style={{ marginBottom: "20px" }}>
-        <Link to="/families/create">➕ Create Family</Link>
+        {/* JOIN FAMILY */}
+        <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
+          <h4 className="text-lg font-medium text-gray-700">
+            Join Family
+          </h4>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              value={inviteToken}
+              onChange={(e) => setInviteToken(e.target.value)}
+              placeholder="Paste invite token"
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-2
+                         focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              onClick={joinFamily}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg
+                         font-medium hover:bg-blue-700 transition"
+            >
+              Join
+            </button>
+          </div>
+        </div>
+
+        {/* FAMILY LIST */}
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          {families.length === 0 ? (
+            <p className="text-gray-500 text-center">
+              You are not part of any families yet.
+            </p>
+          ) : (
+            <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {families.map((f) => (
+                <li
+                  key={f.id}
+                  className="border border-gray-200 rounded-lg p-4
+                             flex items-center justify-between"
+                >
+                  <span className="font-medium text-gray-800">
+                    {f.family_name}
+                  </span>
+                  <Link
+                    to={`/families/${f.id}/invite`}
+                    className="text-sm text-blue-600 hover:text-blue-800"
+                  >
+                    Invite
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
-
-      {/* JOIN FAMILY SECTION */}
-      <div style={{ marginBottom: "20px" }}>
-        <h4>Join Family</h4>
-        <input
-          placeholder="Paste invite token"
-          value={inviteToken}
-          onChange={(e) => setInviteToken(e.target.value)}
-        />
-        <button onClick={joinFamily}>Join</button>
-      </div>
-
-      {/* FAMILY LIST */}
-      <ul>
-        {families.map((f) => (
-          <li key={f.id}>
-            {f.family_name}
-            {"  "}
-            <Link to={`/families/${f.id}/invite`}>Invite</Link>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
