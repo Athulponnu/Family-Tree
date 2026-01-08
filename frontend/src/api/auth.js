@@ -5,7 +5,7 @@ export const loginApi = (data) => {
   formData.append("username", data.username);
   formData.append("password", data.password);
 
-  return axios.post("/auth/login", formData, {
+  return axios.post("/api/v1/auth/login", formData, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
@@ -13,5 +13,5 @@ export const loginApi = (data) => {
 };
 
 export const registerApi = (data) => {
-  return axios.post("/auth/register", data);
+  return axios.post("/api/v1/auth/register", data);
 };

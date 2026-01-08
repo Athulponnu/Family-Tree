@@ -6,13 +6,18 @@ class FamilyMember(Base):
     __tablename__ = "family_members"
 
     id = Column(Integer, primary_key=True)
-    full_name = Column(String(100), nullable=False)
 
-    father_id = Column(Integer, ForeignKey("family_members.id"), nullable=True)
-    mother_id = Column(Integer, ForeignKey("family_members.id"), nullable=True)
+    full_name = Column(String(100), nullable=False)
 
     family_id = Column(Integer, ForeignKey("families.id"), nullable=False)
 
+    # Generic parent reference (inside same family)
+    parent_id = Column(Integer, ForeignKey("family_members.id"), nullable=True)
+
     family = relationship("Family", back_populates="members")
-    father = relationship("FamilyMember", remote_side=[id], foreign_keys=[father_id])
-    mother = relationship("FamilyMember", remote_side=[id], foreign_keys=[mother_id])
+
+    parent = relationship(
+        "FamilyMember",
+        remote_side=[id],
+        backref="children"
+    )

@@ -4,15 +4,16 @@ from sqlalchemy.orm import Session
 from app.db.session import SessionLocal
 from app.models.user import User
 from app.core.security import hash_password, verify_password, create_access_token
+from app.db.session import get_db
 
 router = APIRouter()
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# def get_db():
+#     db = SessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
 
 @router.post("/register")
 def register(username: str, email: str, password: str, db: Session = Depends(get_db)):

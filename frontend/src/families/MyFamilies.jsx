@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { fetchFamilies } from "../api/families";
 import { Link, useNavigate } from "react-router-dom";
+import FamilyTree from "../components/tree/FamilyTree";
 
 export default function MyFamilies() {
   const [families, setFamilies] = useState([]);
   const [inviteToken, setInviteToken] = useState("");
+  const [selectedFamilyId, setSelectedFamilyId] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +21,7 @@ export default function MyFamilies() {
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-gray-50 px-6 py-8">
-      <div className="max-w-5xl mx-auto space-y-8">
+      <div className="max-w-6xl mx-auto space-y-8">
         {/* HEADER */}
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-gray-800">
@@ -57,7 +60,11 @@ export default function MyFamilies() {
         </div>
 
         {/* FAMILY LIST */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
+          <h3 className="text-lg font-medium text-gray-700">
+            Your Families
+          </h3>
+
           {families.length === 0 ? (
             <p className="text-gray-500 text-center">
               You are not part of any families yet.
@@ -67,14 +74,22 @@ export default function MyFamilies() {
               {families.map((f) => (
                 <li
                   key={f.id}
-                  className="border border-gray-200 rounded-lg p-4
-                             flex items-center justify-between"
+                  onClick={() => setSelectedFamilyId(f.id)}
+                  className={`border rounded-lg p-4 cursor-pointer
+                    flex items-center justify-between transition
+                    ${
+                      selectedFamilyId === f.id
+                        ? "border-blue-600 bg-blue-50"
+                        : "border-gray-200 hover:bg-gray-50"
+                    }`}
                 >
                   <span className="font-medium text-gray-800">
                     {f.family_name}
                   </span>
+
                   <Link
                     to={`/families/${f.id}/invite`}
+                    onClick={(e) => e.stopPropagation()}
                     className="text-sm text-blue-600 hover:text-blue-800"
                   >
                     Invite
@@ -84,6 +99,13 @@ export default function MyFamilies() {
             </ul>
           )}
         </div>
+
+        {/* FAMILY TREE */}
+        {selectedFamilyId && (
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <FamilyTree familyId={selectedFamilyId} />
+          </div>
+        )}
       </div>
     </div>
   );
