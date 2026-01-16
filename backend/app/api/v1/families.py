@@ -224,5 +224,96 @@ def get_family_tree(
             "id": family.id,
             "name": family.family_name,
         },
+        "current_user_id": current_user.id,
         "nodes": nodes,
     }
+
+
+@router.delete("/{family_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_family(
+    family_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    family = db.query(Family).filter(Family.id == family_id).first()
+
+    if not family:
+        raise HTTPException(status_code=404, detail="Family not found")
+
+    membership = (
+        db.query(FamilyMembership)
+        .filter(
+            FamilyMembership.family_id == family_id,
+            FamilyMembership.user_id == current_user.id,
+        )
+        .first()
+    )
+
+    if not membership or membership.role != ELDER:
+        raise HTTPException(
+            status_code=403,
+            detail="Only the family owner can delete this family",
+        )
+
+    db.delete(family)
+    db.commit()
+
+    return None
+
+@router.delete("/{family_id}/members/{member_id}", status_code=status.HTTP_204_NO_CONTENT)
+def remove_family_member(
+    family_id: int,
+    member_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    # 1️⃣ Check current user membership
+    actor_membership = (
+        db.query(FamilyMembership)
+        .filter(
+            FamilyMembership.family_id == family_id,
+            FamilyMembership.user_id == current_user.id,
+        )
+        .first()
+    )
+
+    if not actor_membership or actor_membership.role != ELDER:
+        raise HTTPException(
+            status_code=403,
+            detail="Only elders can remove members",
+        )
+
+    # 2️⃣ Prevent self-removal
+    if member_id == current_user.id:
+        raise HTTPException(
+            status_code=400,
+            detail="You cannot remove yourself",
+        )
+
+    # 3️⃣ Target membership
+    target_membership = (
+        db.query(FamilyMembership)
+        .filter(
+            FamilyMembership.family_id == family_id,
+            FamilyMembership.user_id == member_id,
+        )
+        .first()
+    )
+
+    if not target_membership:
+        raise HTTPException(
+            status_code=404,
+            detail="User is not a member of this family",
+        )
+
+    # 4️⃣ Prevent removing another elder (recommended)
+    if target_membership.role == ELDER:
+        raise HTTPException(
+            status_code=403,
+            detail="You cannot remove another elder",
+        )
+
+    db.delete(target_membership)
+    db.commit()
+
+    return None
