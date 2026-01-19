@@ -6,7 +6,8 @@ import {
 } from "../api/families";
 
 /* ---------- LEGACY ---------- */
-export const addFamilyMember = (data) =>
+/* DO NOT USE FOR NEW CODE */
+export const addFamilyMemberLegacy = (data) =>
   API.post("/family", null, { params: data });
 
 /* ---------- FAMILY TREE ---------- */
@@ -25,4 +26,9 @@ export const removeFamily = async (familyId) => {
 /* ---------- KICK MEMBER ---------- */
 export const kickMember = async (familyId, userId) => {
   return await removeFamilyMember(familyId, userId);
+};
+
+/* ---------- NEW (CORRECT) ---------- */
+export const addFamilyMember = (familyId, payload) => {
+  return api.post(`/families/${familyId}/members`, payload);
 };

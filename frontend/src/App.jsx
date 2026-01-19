@@ -2,20 +2,24 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import MyFamilies from "./families/MyFamilies";
-import CreateFamily from "./families/CreateFamily";
 import InviteMember from "./families/InviteMember";
 import JoinFamily from "./families/JoinFamily";
 import Navbar from "./components/Navbar";
-import { useAuth } from "./context/AuthContext";
 import Profile from "./profile/Profile";
+import CreateFamily from "./families/CreateFamily";
+
+import { useAuth } from "./context/AuthContext";
 
 function ProtectedRoute({ children }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return null;
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
 
 export default function App() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return null;
 
   return (
     <>
@@ -59,15 +63,6 @@ export default function App() {
         />
 
         <Route
-          path="/families/create"
-          element={
-            <ProtectedRoute>
-              <CreateFamily />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
           path="/families/:id/invite"
           element={
             <ProtectedRoute>
@@ -81,6 +76,15 @@ export default function App() {
           element={
             <ProtectedRoute>
               <JoinFamily />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/families/create"
+          element={
+            <ProtectedRoute>
+              <CreateFamily />
             </ProtectedRoute>
           }
         />

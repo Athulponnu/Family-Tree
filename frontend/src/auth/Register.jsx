@@ -17,9 +17,14 @@ export default function Register() {
     try {
       setLoading(true);
       setError("");
-      await registerApi(form);
+      await registerApi({
+        username: form.username,
+        email: form.email,
+        password: form.password,
+      });
       navigate("/login");
     } catch (err) {
+      console.error("REGISTER ERROR:", err.response?.data);
       setError("Registration failed. Please check your details.");
     } finally {
       setLoading(false);
@@ -56,6 +61,8 @@ export default function Register() {
               placeholder="Choose a username"
               className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2
                          focus:outline-none focus:ring-2 focus:ring-blue-500"
+              autoComplete="username"
+              required
             />
           </div>
 
@@ -72,6 +79,8 @@ export default function Register() {
               placeholder="you@example.com"
               className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2
                          focus:outline-none focus:ring-2 focus:ring-blue-500"
+              autoComplete="email"
+              required
             />
           </div>
 
@@ -88,6 +97,8 @@ export default function Register() {
               placeholder="Create a strong password"
               className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2
                          focus:outline-none focus:ring-2 focus:ring-blue-500"
+              autoComplete="new-password"
+              required
             />
           </div>
         </div>

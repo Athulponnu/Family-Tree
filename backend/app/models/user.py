@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String,Text
+from sqlalchemy import Column, Integer, String,Text,ForeignKey
 from sqlalchemy.orm import relationship
 from app.db.base import Base
+from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = "users"
@@ -12,3 +13,7 @@ class User(Base):
 
     memberships = relationship("FamilyMembership", back_populates="user")
     bio = Column(Text, nullable=True)
+        # 🔑 NEW: link user to person
+    person_id = Column(Integer, ForeignKey("persons.id"), nullable=True)
+
+    person = relationship("Person")

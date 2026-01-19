@@ -1,18 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const [isAuth, setIsAuth] = useState(false);
+  const { isAuthenticated, loading, logout } = useAuth();
 
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    setIsAuth(!!token);
-  }, []);
+  if (loading) return null;
 
-  const logout = () => {
-    localStorage.removeItem("access_token");
-    setIsAuth(false);
+  const handleLogout = () => {
+    logout();
     navigate("/login");
   };
 
@@ -25,7 +21,7 @@ export default function Navbar() {
 
       {/* RIGHT */}
       <div className="space-x-6 flex items-center">
-        {!isAuth ? (
+        {!isAuthenticated ? (
           <>
             <Link to="/login" className="hover:text-gray-300">
               Login
@@ -56,7 +52,7 @@ export default function Navbar() {
             </Link>
 
             <button
-              onClick={logout}
+              onClick={handleLogout}
               className="text-red-400 hover:text-red-300"
             >
               Logout

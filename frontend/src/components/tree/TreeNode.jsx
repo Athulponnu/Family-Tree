@@ -52,9 +52,9 @@ export default function TreeNode({ node, canRemove, onRemove }) {
         <div style={{ fontSize: "13px", color: "#555" }}>
           Also connected to:
           <div style={{ marginTop: "4px" }}>
-            {secondary_memberships.map((m) => (
+            {secondary_memberships.map((m, index) => (
               <Badge
-                key={m.family_id}
+                key={`${m.family_id}-${m.relation}-${index}`}
                 text={`${m.family_name} • ${m.relation}`}
               />
             ))}

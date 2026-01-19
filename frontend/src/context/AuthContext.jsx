@@ -1,12 +1,20 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { loginApi } from "../api/auth";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(
-    localStorage.getItem("access_token")
-  );
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // 🔑 Restore auth state on app load
+  useEffect(() => {
+    const storedToken = localStorage.getItem("access_token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+    setLoading(false);
+  }, []);
 
   const login = async (credentials) => {
     const res = await loginApi(credentials);
@@ -23,6 +31,8 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         isAuthenticated: !!token,
+        token,
+        loading,
         login,
         logout,
       }}
